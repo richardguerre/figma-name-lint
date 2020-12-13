@@ -18,7 +18,7 @@ This plugin is particularly useful to prepare designs for developer-handoff, whe
 
 Having the same element names in both Figma and your codebase makes the communication between designers and developer easier, but also makes it easier to backtrace elements from code to design and iterate faster.
 
-## Other info
+## More info
 
-Project page: [Link to Notion doc]
+👉 [Click here for more info](https://bit.ly/figma-name-linter)
 Inspired by the [Design Lint](https://github.com/destefanis/design-lint) Figma Plugin by destefanis.
