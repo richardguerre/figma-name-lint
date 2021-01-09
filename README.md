@@ -1,4 +1,4 @@
-# Figma Name Linter
+# Figma Name Lint
 
 ## What is it?
 
