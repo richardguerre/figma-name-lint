@@ -4,7 +4,8 @@
   "description": "",
   "main": "code.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode=production",
+    "watch": "webpack --mode=development --watch",
     "prettier": "prettier --write \"./**/*.{scss,json,ts,tsx}\""
   },
   "author": "",
