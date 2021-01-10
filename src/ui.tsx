@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import './ui.css';
+import './ui.scss';
 import logo from './logo.svg';
+import { Title } from 'react-figma-plugin-ds';
 
 declare function require(path: string): any;
 
@@ -28,15 +29,9 @@ const App = () => {
 
   return (
     <div>
-      <img src={logo} />
-      <h2>Rectangle Creator</h2>
-      <p>
-        Count: <input ref={countRef} />
-      </p>
-      <button id="create" onClick={onCreate}>
-        Create
-      </button>
-      <button onClick={onCancel}>Cancel</button>
+      <Title size="xlarge" weight="bold">
+        Name Lint
+      </Title>
     </div>
   );
 };
