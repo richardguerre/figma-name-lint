@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Icon, Input, Text } from 'react-figma-plugin-ds';
+import 'react-figma-plugin-ds/figma-plugin-ds.css';
 import './ui.scss';
 
 declare function require(path: string): any;
 
 const App = () => {
-  const [elements, setElements] = useState<SceneNode[]>([]);
+  const [nodes, setNodes] = useState<SceneNode[]>([]);
 
   useEffect(() => {
     parent.postMessage(
@@ -22,28 +23,28 @@ const App = () => {
       const { type, data } = e.data.pluginMessage;
       if (type === 'found-nodes') {
         console.log('found nodes', data.nodes, e.data.pluginMessage);
-        setElements(data.nodes);
+        setNodes(data.nodes);
       } else if (type === 'node-renamed') {
-        setElements(el => el.filter(node => node.id !== data.nodeId));
+        setNodes(el => el.filter(node => node.id !== data.nodeId));
       }
     });
   }, []);
 
   return (
     <div>
-      <Text size="small">Choose an element and double click to rename it.</Text>
-      {elements.map(node => (
-        <Element key={node.id} node={node} />
+      <Text size="small">Choose a layer and double click to rename it.</Text>
+      {nodes.map(node => (
+        <Node key={node.id} node={node} />
       ))}
     </div>
   );
 };
 
-type ElementProps = {
+type NodeProps = {
   node: SceneNode;
 };
 
-const Element = ({ node }: ElementProps) => {
+const Node = ({ node }: NodeProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(node.name);
 
@@ -84,7 +85,7 @@ const Element = ({ node }: ElementProps) => {
     <div
       onClick={handleClick}
       onDoubleClick={() => setIsEditing(true)}
-      className="Element"
+      className="Layer"
     >
       <Icon name="frame"></Icon>
       {!isEditing ? (

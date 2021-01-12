@@ -6,6 +6,7 @@ figma.ui.onmessage = msg => {
   const { type, data } = msg;
   if (type === 'find-all-nodes') {
     const nodes = findAllNodes();
+    console.log(nodes.length);
     sendToUI('found-nodes', { nodes });
   } else if (type === 'zoom-into-node') {
     const node = findNodeById(data.nodeId);
@@ -27,6 +28,20 @@ function sendToUI<T>(type: string, data: T) {
 type NameNode = {
   id: string;
   name: string;
+  type:
+    | 'SLICE'
+    | 'FRAME'
+    | 'GROUP'
+    | 'COMPONENT'
+    | 'INSTANCE'
+    | 'BOOLEAN_OPERATION'
+    | 'VECTOR'
+    | 'STAR'
+    | 'LINE'
+    | 'ELLIPSE'
+    | 'POLYGON'
+    | 'RECTANGLE'
+    | 'TEXT';
 };
 
 function findAllNodes(): NameNode[] {
@@ -41,7 +56,7 @@ function findAllNodes(): NameNode[] {
           ...mapToNameNode(c.findAll(node => regex.test(node.name))),
         ];
       } else if (regex.test(c.name)) {
-        return [...a, { id: c.id, name: c.name }];
+        return [...a, ...mapToNameNode([c])];
       } else {
         return a;
       }
@@ -54,7 +69,7 @@ function findAllNodes(): NameNode[] {
 }
 
 function mapToNameNode(nodes: SceneNode[]): NameNode[] {
-  return nodes.map(({ id, name }) => ({ id, name }));
+  return nodes.map(({ id, name, type }) => ({ id, name, type }));
 }
 
 function findNodeById(nodeId: string): SceneNode {
