@@ -1,5 +1,5 @@
 {
-  "name": "Name Linter",
+  "name": "Name Lint",
   "id": "738168449509241867",
   "api": "1.0.0",
   "main": "dist/code.js",
