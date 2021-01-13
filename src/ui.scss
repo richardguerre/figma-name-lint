@@ -1,0 +1,15 @@
+.App {
+  .Node {
+    height: 32px;
+    background-color: lightblue;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 1px solid black;
+
+    .Icon {
+      transform: scale(0.7);
+      border: 1px solid blue;
+    }
+  }
+}

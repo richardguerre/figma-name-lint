@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Icon, Input, Text } from 'react-figma-plugin-ds';
+import { useForm } from 'react-hook-form';
+import { Icon, Text } from 'react-figma-plugin-ds';
 import 'react-figma-plugin-ds/figma-plugin-ds.css';
 import './ui.scss';
 
@@ -10,19 +11,11 @@ const App = () => {
   const [nodes, setNodes] = useState<SceneNode[]>([]);
 
   useEffect(() => {
-    parent.postMessage(
-      {
-        pluginMessage: {
-          type: 'find-all-nodes',
-        },
-      },
-      '*'
-    );
+    sendToCode('find-all-nodes');
 
     window.addEventListener('message', e => {
       const { type, data } = e.data.pluginMessage;
       if (type === 'found-nodes') {
-        console.log('found nodes', data.nodes, e.data.pluginMessage);
         setNodes(data.nodes);
       } else if (type === 'node-renamed') {
         setNodes(el => el.filter(node => node.id !== data.nodeId));
@@ -31,7 +24,7 @@ const App = () => {
   }, []);
 
   return (
-    <div>
+    <div className="App">
       <Text size="small">Choose a layer and double click to rename it.</Text>
       {nodes.map(node => (
         <Node key={node.id} node={node} />
@@ -40,15 +33,22 @@ const App = () => {
   );
 };
 
+type FormValues = {
+  name: string;
+};
+
 type NodeProps = {
   node: SceneNode;
 };
 
 const Node = ({ node }: NodeProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState(node.name);
+  const { register, handleSubmit, reset } = useForm<FormValues>({
+    defaultValues: { name: node.name },
+  });
 
   const handleClick = () => {
+    sendToCode('zoom-into-node', { nodeId: node.id });
     parent.postMessage(
       {
         pluginMessage: {
@@ -62,46 +62,50 @@ const Node = ({ node }: NodeProps) => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const newName = value !== '' || value !== node.name ? value : node.name;
-    console.log(newName);
-    parent.postMessage(
-      {
-        pluginMessage: {
-          type: 'rename-node',
-          data: {
-            nodeId: node.id,
-            newName,
-          },
-        },
-      },
-      '*'
-    );
+  const onSubmit = (v: FormValues) => {
+    const newName = v.name !== '' || v.name !== node.name ? v.name : node.name;
+    sendToCode('rename-node', { nodeId: node.id, newName });
     setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    reset();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') handleCancel();
   };
 
   return (
     <div
       onClick={handleClick}
       onDoubleClick={() => setIsEditing(true)}
-      className="Layer"
+      className="Node"
     >
-      <Icon name="frame"></Icon>
+      <Icon name="frame" className="Icon"></Icon>
       {!isEditing ? (
         <Text>{node.name}</Text>
       ) : (
-        <form onSubmit={handleSubmit}>
-          <Input
-            placeholder="Rename it!"
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input
+            name="name"
+            className="nameInput"
             type="text"
-            defaultValue={node.name}
-            onChange={setValue}
-          ></Input>
+            placeholder="Rename it!"
+            autoFocus
+            ref={register}
+            onBlur={handleCancel}
+            onKeyDown={handleKeyDown}
+          />
         </form>
       )}
     </div>
   );
 };
+
+function sendToCode<T>(type: string, data?: T) {
+  parent.postMessage({ pluginMessage: { type, data } }, '*');
+}
 
 ReactDOM.render(<App />, document.getElementById('react-page'));

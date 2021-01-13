@@ -6,7 +6,6 @@ figma.ui.onmessage = msg => {
   const { type, data } = msg;
   if (type === 'find-all-nodes') {
     const nodes = findAllNodes();
-    console.log(nodes.length);
     sendToUI('found-nodes', { nodes });
   } else if (type === 'zoom-into-node') {
     const node = findNodeById(data.nodeId);
