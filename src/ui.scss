@@ -5,6 +5,14 @@
 
 .App {
   --border: 1px;
+
+  .header {
+    padding: 10px;
+    .text {
+      font: var(--figma-font);
+    }
+  }
+
   .Node {
     height: 32px;
     padding: var(--border);

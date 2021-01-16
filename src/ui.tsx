@@ -23,14 +23,18 @@ const App = () => {
       if (type === 'found-nodes') {
         setNodes(data.nodes);
       } else if (type === 'node-renamed') {
-        setNodes(el => el.filter(node => node.id !== data.nodeId));
+        setNodes(nodes => nodes.filter(node => node.id !== data.nodeId));
       }
     });
   }, []);
 
   return (
     <div className="App">
-      <Text size="small">Choose a layer and double click to rename it.</Text>
+      <div className="header">
+        <span className="text">
+          Choose a layer and double click to rename it.
+        </span>
+      </div>
       {nodes.map(node => (
         <Node
           key={node.id}
@@ -59,11 +63,6 @@ const Node = ({ node, selected, onSelect }: NodeProps) => {
     defaultValues: { name: node.name },
   });
 
-  const handleClick = () => {
-    onSelect();
-    sendToCode('zoom-into-node', { nodeId: node.id });
-  };
-
   const handleFocus = () => {
     setTimeout(
       // @ts-ignore
@@ -87,9 +86,13 @@ const Node = ({ node, selected, onSelect }: NodeProps) => {
     if (e.key === 'Escape') handleCancel();
   };
 
+  useEffect(() => {
+    selected && sendToCode('zoom-into-node', { nodeId: node.id });
+  }, [selected]);
+
   return (
     <div
-      onClick={handleClick}
+      onClick={onSelect}
       onDoubleClick={() => setIsEditing(true)}
       className={`Node ${selected ? 'selected' : ''}`}
     >
