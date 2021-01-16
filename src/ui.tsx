@@ -64,6 +64,14 @@ const Node = ({ node, selected, onSelect }: NodeProps) => {
     sendToCode('zoom-into-node', { nodeId: node.id });
   };
 
+  const handleFocus = () => {
+    setTimeout(
+      // @ts-ignore
+      () => document.getElementsByName('name')[0].select(),
+      5
+    );
+  };
+
   const onSubmit = (v: FormValues) => {
     const newName = v.name !== '' || v.name !== node.name ? v.name : node.name;
     sendToCode('rename-node', { nodeId: node.id, newName });
@@ -97,6 +105,7 @@ const Node = ({ node, selected, onSelect }: NodeProps) => {
             placeholder="Rename it!"
             autoFocus
             ref={register}
+            onFocus={handleFocus}
             onBlur={handleCancel}
             onKeyDown={handleKeyDown}
           />
