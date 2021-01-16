@@ -62,17 +62,6 @@ const Node = ({ node, selected, onSelect }: NodeProps) => {
   const handleClick = () => {
     onSelect();
     sendToCode('zoom-into-node', { nodeId: node.id });
-    parent.postMessage(
-      {
-        pluginMessage: {
-          type: 'zoom-into-node',
-          data: {
-            nodeId: node.id,
-          },
-        },
-      },
-      '*'
-    );
   };
 
   const onSubmit = (v: FormValues) => {
