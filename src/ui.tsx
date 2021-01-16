@@ -9,6 +9,11 @@ declare function require(path: string): any;
 
 const App = () => {
   const [nodes, setNodes] = useState<SceneNode[]>([]);
+  const [selectedNodeId, setSelectedNodeId] = useState<string>();
+
+  const handleSelect = (nodeId: string) => {
+    setSelectedNodeId(nodeId);
+  };
 
   useEffect(() => {
     sendToCode('find-all-nodes');
@@ -27,7 +32,12 @@ const App = () => {
     <div className="App">
       <Text size="small">Choose a layer and double click to rename it.</Text>
       {nodes.map(node => (
-        <Node key={node.id} node={node} />
+        <Node
+          key={node.id}
+          node={node}
+          selected={node.id === selectedNodeId}
+          onSelect={() => handleSelect(node.id)}
+        />
       ))}
     </div>
   );
@@ -39,15 +49,18 @@ type FormValues = {
 
 type NodeProps = {
   node: SceneNode;
+  selected: boolean;
+  onSelect: () => void;
 };
 
-const Node = ({ node }: NodeProps) => {
+const Node = ({ node, selected, onSelect }: NodeProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const { register, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: { name: node.name },
   });
 
   const handleClick = () => {
+    onSelect();
     sendToCode('zoom-into-node', { nodeId: node.id });
     parent.postMessage(
       {
@@ -81,11 +94,11 @@ const Node = ({ node }: NodeProps) => {
     <div
       onClick={handleClick}
       onDoubleClick={() => setIsEditing(true)}
-      className="Node"
+      className={`Node ${selected ? 'selected' : ''}`}
     >
-      <Icon name="frame" className="Icon"></Icon>
+      <Icon name="frame" className="Icon" />
       {!isEditing ? (
-        <Text>{node.name}</Text>
+        <span className="nameText">{node.name}</span>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <input

@@ -1,15 +1,57 @@
+:root {
+  --figma-blue: #18a0fb;
+  --figma-font: normal 11px 'Inter', sans-serif;
+}
+
 .App {
+  --border: 1px;
   .Node {
     height: 32px;
-    background-color: lightblue;
+    padding: var(--border);
     display: flex;
     flex-direction: row;
     align-items: center;
-    border: 1px solid black;
+    box-sizing: border-box;
+    cursor: default;
+    color: #333;
+
+    &:hover {
+      border: solid var(--border) var(--figma-blue);
+      padding: 0;
+    }
 
     .Icon {
-      transform: scale(0.7);
-      border: 1px solid blue;
+      transform: scale(0.65);
     }
+
+    .nameText {
+      padding: 1px;
+      font-size: 11px;
+      font: var(--figma-font);
+    }
+
+    form {
+      width: 100%;
+      height: 24px;
+      margin: 0;
+      padding-right: 3px;
+
+      .nameInput {
+        width: 100%;
+        height: 100%;
+        border: solid calc(var(--border) * 2) var(--figma-blue);
+        font: var(--figma-font);
+
+        &:focus {
+          outline: 0;
+        }
+      }
+    }
+  }
+
+  .selected {
+    border: none !important;
+    padding: var(--border) !important;
+    background-color: #daebf7;
   }
 }
