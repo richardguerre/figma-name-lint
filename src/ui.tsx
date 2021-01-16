@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useForm } from 'react-hook-form';
-import { Icon, Text } from 'react-figma-plugin-ds';
+import Icon from './Icon';
 import 'react-figma-plugin-ds/figma-plugin-ds.css';
 import './ui.scss';
 
 declare function require(path: string): any;
+
+function sendToCode<T>(type: string, data?: T) {
+  parent.postMessage({ pluginMessage: { type, data } }, '*');
+}
 
 const App = () => {
   const [nodes, setNodes] = useState<SceneNode[]>([]);
@@ -87,7 +91,7 @@ const Node = ({ node, selected, onSelect }: NodeProps) => {
   };
 
   useEffect(() => {
-    selected && sendToCode('zoom-into-node', { nodeId: node.id });
+    if (selected) sendToCode('zoom-into-node', { nodeId: node.id });
   }, [selected]);
 
   return (
@@ -96,7 +100,7 @@ const Node = ({ node, selected, onSelect }: NodeProps) => {
       onDoubleClick={() => setIsEditing(true)}
       className={`Node ${selected ? 'selected' : ''}`}
     >
-      <Icon name="frame" className="Icon" />
+      <Icon type={node.type} className="Icon" />
       {!isEditing ? (
         <span className="nameText">{node.name}</span>
       ) : (
@@ -117,9 +121,5 @@ const Node = ({ node, selected, onSelect }: NodeProps) => {
     </div>
   );
 };
-
-function sendToCode<T>(type: string, data?: T) {
-  parent.postMessage({ pluginMessage: { type, data } }, '*');
-}
 
 ReactDOM.render(<App />, document.getElementById('react-page'));

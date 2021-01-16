@@ -21,7 +21,7 @@ figma.ui.onmessage = msg => {
 };
 
 function sendToUI<T>(type: string, data: T) {
-  figma.ui.postMessage({ type, data }); // onmessage = e => const {type, data} = e.data.pluginMessage;
+  figma.ui.postMessage({ type, data });
 }
 
 type NameNode = {
