@@ -1,5 +1,7 @@
 # Figma Name Lint
 
+![cover art](https://raw.githubusercontent.com/richardguerre/figma-name-lint/master/Cover-art.png)
+
 ## What is it?
 
 A Figma plugin that allows you to rename all default-named elements in the current page.
@@ -21,4 +23,5 @@ Having the same element names in both Figma and your codebase makes the communic
 ## More info
 
 👉 [Click here for more info](https://bit.ly/figma-name-linter)
+
 Inspired by the [Design Lint](https://github.com/destefanis/design-lint) Figma Plugin by destefanis.
